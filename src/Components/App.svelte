@@ -1,36 +1,34 @@
 <script>
-        import { addDoc, collection, onSnapshot, deleteDoc } from "firebase/firestore";
+        import { addDoc, collection, onSnapshot, deleteDoc, doc } from "firebase/firestore";
         import db from "../lib/firebase.js";
         import { onMount } from "svelte";
-        //pour récuperer la value de l'input.
         let produit = "";
         let snap;
+        let inputData;
 
-        //instantané de la base de donnée
         onMount(() => {
                 onSnapshot(collection(db, "todos"), (snapshot) => {
                         snap = snapshot.docs;
-        });
+                });
         });
 
-        //function async pour ajouter un produit dans la base de donnée.
         async function handleSubmit(event) {
                 event.preventDefault();
                 console.log(db);
 
-                const inputData = {
+                inputData = {
                         produit: produit.trim(),
+                        id: crypto.randomUUID(),
                 };
 
                 await addDoc(collection(db, "todos"), inputData);
-        };
+        }
 
-        //function async pour supprimer un produit dans la base de donnée.
-        // async function handleClick(event) {
-        //         await deleteDoc(collection(db, "todos"), event.target.id);
-        //         console.log("Document successfully deleted!");
-        // };
-
+        async function handleClick(id) {
+                const docRef = doc(db, "todos", id);
+                await deleteDoc(docRef);
+                console.log("Document successfully deleted!");
+        }
 </script>
 
 <form on:submit={handleSubmit}>
@@ -39,11 +37,11 @@
 </form>
 {#if snap}
         <ul>
-                {#each snap as item }
+                 {#each snap as doc}
                         <li>
-                                {item.data().produit}
-                                <button >x</button>
+                                {doc.data().produit}
+                                <button on:click={() => handleClick(doc.id)}>x</button>
                         </li>
-                {/each}
+                {/each} 
         </ul>
 {/if}
