@@ -1,7 +1,5 @@
-import { initializeApp, getApps, getApp, deleteApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-
-
 
 const firebaseConfig = {
         apiKey: "AIzaSyD7desTDoiCwzDtUfICatukD1I9McTboeQ",
@@ -11,7 +9,6 @@ const firebaseConfig = {
         messagingSenderId: "568346755292",
         appId: "1:568346755292:web:228e7d1a2e9f4419e2b419",
 };
-
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
